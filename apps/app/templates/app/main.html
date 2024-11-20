@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Места для отдыха</title>
+    <style>
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; 
+            align-items: flex-start; 
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            width: 430px; 
+            background-color: #f9f9f9;
+        }
+
+        .card img {
+            width: 100%; 
+            height: 250px; 
+            object-fit: cover; 
+            border-radius: 5px;
+        }
+
+        .card h2 {
+            font-size: 1.5em; 
+            margin: 10px 0;
+        }
+
+        .card p {
+            font-size: 1em; 
+            color: #666;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    {% include 'app/header.html' %}
+    <div class="grid">
+        {% for place in places %}
+            <div class="card">
+                <img src="{{ place.image.url }}" alt="{{ place.name }}">
+                <h2>{{ place.name }}</h2>
+                <p>{{ place.description|truncatewords:10 }}</p>
+                <a href="{% url 'detail_page' place.id %}">Подробнее</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
