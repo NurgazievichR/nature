@@ -27,13 +27,12 @@ class GenerateQRCodeAPIView(APIView):
 
     @staticmethod
     def get(request):
-        place = request.GET.get('place')
-        place_obj = get_object_or_404(Place, id=place.id)
-        one_time_pass = OneTimePass.objects.create(place=place_obj)
+        place_id = request.GET.get('place_id')
+        place = get_object_or_404(Place, id=place_id)
+        one_time_pass = OneTimePass.objects.create(place=place)
         one_time_pass.code = one_time_pass.id
         one_time_pass.save()
         data = {
             'code': one_time_pass.code,
-            'place': place.name,
         }
         return JsonResponse(data, safe=False)
