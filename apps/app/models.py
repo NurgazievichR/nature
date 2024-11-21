@@ -9,3 +9,17 @@ class Place(models.Model):
 
     def __str__(self):
         return self.name
+
+class OneTimePass(models.Model):
+    code = models.CharField(max_length=200)
+    place = models.ForeignKey(Place, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return self.code
+
+class SubscriptionPass(models.Model):
+    code = models.CharField(max_length=200)
+    expires = models.DateTimeField()
+
+    def __str__(self):
+        return self.code
