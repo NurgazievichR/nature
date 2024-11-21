@@ -1,9 +1,6 @@
 import qrcode
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from lxml.parser import filename
-
-from utils.generate_qr import generate_qr
 from .models import Place, OneTimePass
 from ..users.models import User
 
@@ -20,7 +17,7 @@ def detail_page(request, id):
     place = get_object_or_404(Place, id=id)
     return render(request, 'app/detail.html', {'place': place})
 
-def place_page(request, id):
+def payment_page(request, id):
     place = get_object_or_404(Place, id=id)
     one_time_pass = OneTimePass.objects.create(place=place)
     one_time_pass.code = one_time_pass.id
@@ -33,3 +30,12 @@ def place_page(request, id):
 
     img_resp = open(filename, 'rb')
     return FileResponse(img_resp)
+
+def qr_handler(request, id):
+    one_time_pass = get_object_or_404(OneTimePass, id=id)
+    if request.user.is_authenticated:
+        user = User.objects.get(id=request.user.id)
+        if user.role == 'staff':
+            return render(request, 'app/approve_qr')
+        else:
+            return HttpResponse('Unauthorized', status=401)
